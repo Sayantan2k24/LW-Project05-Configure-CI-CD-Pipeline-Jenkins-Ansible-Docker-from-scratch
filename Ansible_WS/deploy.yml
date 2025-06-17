@@ -1,0 +1,14 @@
+- hosts: deploy-server
+  become: true
+  tasks:
+    - name: Pull image from registry
+      shell: docker pull {{ registry_url }}/{{ image_name }}:{{ image_tag }}
+
+    - name: Stop old container
+      shell: docker stop {{ container_name }} || true
+
+    - name: Remove old container
+      shell: docker rm {{ container_name }} || true
+
+    - name: Run new container
+      shell: docker run -d --name {{ container_name }} -p 5000:{{ container_port }} {{ registry_url }}/{{ iamge_name }}:{{ image_tag }}
