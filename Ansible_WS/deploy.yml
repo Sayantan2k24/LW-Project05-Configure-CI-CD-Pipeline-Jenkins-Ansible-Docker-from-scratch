@@ -11,4 +11,4 @@
       shell: docker rm {{ container_name }} || true
 
     - name: Run new container
-      shell: docker run -d --name {{ container_name }} -p 5000:{{ container_port }} {{ registry_url }}/{{ iamge_name }}:{{ image_tag }}
+      shell: docker run -d --name {{ container_name }} -p 5000:{{ container_port }} {{ registry_url }}/{{ image_name }}:{{ image_tag }}

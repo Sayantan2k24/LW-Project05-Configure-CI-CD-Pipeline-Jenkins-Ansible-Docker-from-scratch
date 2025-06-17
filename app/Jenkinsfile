@@ -34,9 +34,9 @@ pipeline {
         // jenkins will send the necessary files i.e app code and dockerfile to Image Builder Jenkins Agent node Node
         stage('Send App Code to Image Builder Agent') {
             steps {
-                sshagent([env.SSH_KEY_AGENT_ID]) {
+                sshagent(credentials: ['ssh-to-image-builder']) {
                     sh """
-                    scp -o StrictHostKeyChecking=no -r app/ jenkinsAgent@${JENKINS_AGENT_IMAGE_BUILDER_IP}:/home/jenkinsAgent/
+                    scp -o StrictHostKeyChecking=no -r ${WORKSPACE}/app jenkinsAgent@${JENKINS_AGENT_IMAGE_BUILDER_IP}:/home/jenkinsAgent/
                     """
                     // finally app code will be in /home/jenkinsAgent/app/
                 }
@@ -50,7 +50,7 @@ pipeline {
 
                 // the script will get executed in the agent node locally.
                 sh """
-                  cd /home/JenkinsAgent/app
+                  cd /home/jenkinsAgent/app
                   docker build -t ${REGISTRY_URL}/${IMAGE_NAME}:${BUILD_TAG} .
                 """
             }
@@ -67,11 +67,10 @@ pipeline {
         }
 
         stage('Copy Playbook to Ansible Master') {
-            agent any
             steps {
                 sshagent(credentials: ['ssh-to-ansible-master']) {
                     sh """
-                    scp -o StrictHostKeyChecking=no -r  Ansible_WS/ ansible@${ANSIBLE_MASTER_IP}:/home/ansible/
+                    scp -o StrictHostKeyChecking=no -r  ${WORKSPACE}/Ansible_WS ansible@${ANSIBLE_MASTER_IP}:/home/ansible/
                     """
                 }
             }
