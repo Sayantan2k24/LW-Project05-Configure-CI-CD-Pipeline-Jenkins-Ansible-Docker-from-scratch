@@ -4,6 +4,13 @@ import netifaces
 
 app = Flask(__name__)
 
+
+@app.route('/health')
+def health():
+    return jsonify({
+        "health": "UP and Running!!"
+    })
+
 @app.route('/')
 def host_info():
     hostname = socket.gethostname()
