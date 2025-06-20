@@ -70,10 +70,10 @@ chown -R jenkins:jenkins /var/lib/jenkins/.ssh/*
 chmod 400 /var/lib/jenkins/.ssh/id_rsa
 
 # if needed run sshd service, root will handle sshd
-/usr/sbin/sshd -D 
+/usr/sbin/sshd -D &
 
 # jenkins will be run as Jenkins user, jenkins will handle jenkins service
-sudo -u jenkins java -jar /usr/share/java/jenkins.war
+sudo -u jenkins java -jar /usr/share/java/jenkins.war &
 
 # will get the initial admin pass here
 # /var/lib/jenkins/.jenkins/secrets/initialAdminPassword
